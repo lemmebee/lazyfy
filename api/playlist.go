@@ -1,18 +1,17 @@
 package api
 
 import (
+	"context"
 	"log"
 	"strconv"
 
-	"github.com/zmb3/spotify"
+	"github.com/zmb3/spotify/v2"
 )
 
 func DescribePlaylist(playlistID spotify.ID) *spotify.FullPlaylist {
-	client := initClient()
-
-	playlist, err := client.GetPlaylist(playlistID)
+	playlist, err := Client.GetPlaylist(context.Background(), playlistID)
 	if err != nil {
-		log.Fatalf("error retrieve playlist data: %v", err)
+		log.Fatalf("Error retrieving playlist data: %v", err)
 	}
 
 	return playlist
