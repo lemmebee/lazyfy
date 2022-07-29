@@ -23,74 +23,94 @@ type Artist struct {
 
 type Playlist struct {
 	id     spotify.ID
+	name   string
 	tracks []Track
 }
 
 var (
-	ctx                        = context.Background()
-	fPlaylists      []Playlist = nil
-	fPlaylistTracks []Track    = nil
+	ctx                       = context.Background()
+	playlists      []Playlist = nil
+	playlistIDs    []string   = nil
+	playlistNames  []string   = nil
+	playlistTracks []Track    = nil
 )
 
 func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
 	fullPlaylist, err := Client.GetPlaylist(ctx, playlist.id)
 	if err != nil {
-		log.Fatalf("Error fetching playlist: %v", err)
+		log.Fatalf("Error fetching full playlist: %v", err)
 	}
 
 	return fullPlaylist
 }
 
-func PlayListFollowersCount(playlist Playlist) (playListFollowersCount string) {
+func GetPlayListFollowersCount(playlist Playlist) (playListFollowersCount string) {
 	fullPlaylist := DescribePlaylist(playlist)
 	playListFollowersCount = strconv.FormatUint(uint64(fullPlaylist.Followers.Count), 10)
 
 	return playListFollowersCount
 }
 
-func PlaylistName(playlist Playlist) (playlistName string) {
-	fullPlaylist := DescribePlaylist(playlist)
-	playlistName = fullPlaylist.SimplePlaylist.Name
-
-	return playlistName
-}
-
-func GetFeaturedPlaylistsWithCountry(countryCode string) (message string, fPlaylists []spotify.SimplePlaylist) {
+func GetSimplePlaylistsWithCountry(countryCode string) (message string, simplePlaylists []spotify.SimplePlaylist) {
 	message, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx, spotify.Country(countryCode))
 	if err != nil {
-		log.Default().Fatalln("Error fetching featured playlists", err)
+		log.Default().Fatalln("Error fetching simple playlist pages:", err)
 	}
-	fPlaylists = simplePlaylistPages.Playlists
-
-	return message, fPlaylists
+	simplePlaylists = simplePlaylistPages.Playlists
+	return message, simplePlaylists
 }
 
-func GetFeaturedPlaylists() (message string, fPlaylists []spotify.SimplePlaylist) {
+func GetSimplePlaylists() (message string, simplePlaylists []spotify.SimplePlaylist) {
 	message, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx)
 	if err != nil {
-		log.Default().Fatalln("Error fetching featured playlists", err)
+		log.Default().Fatalln("Error fetching simple playlist pages:", err)
 	}
-	fPlaylists = simplePlaylistPages.Playlists
-
-	return message, fPlaylists
+	simplePlaylists = simplePlaylistPages.Playlists
+	return message, simplePlaylists
 }
 
-func GetFeaturedPlaylist() (fPlaylists []Playlist) {
+func GetPlaylists() (playlists []Playlist) {
 
-	_, fSimplePlaylists := GetFeaturedPlaylists()
+	_, simplePlaylists := GetSimplePlaylists()
 
-	for _, fSimplePlaylist := range fSimplePlaylists {
-		fPlaylists = append(fPlaylists, Playlist{id: fSimplePlaylist.ID})
+	for _, simplePlaylist := range simplePlaylists {
+		playlists = append(playlists,
+			Playlist{
+				id:   simplePlaylist.ID,
+				name: simplePlaylist.Name,
+			})
 	}
-	for _, fPlaylist := range fPlaylists {
-		fFullPlaylist := DescribePlaylist(fPlaylist)
+	for _, playlist := range playlists {
+		fullPlaylist := DescribePlaylist(playlist)
 
-		for _, fPlaylistTrack := range fFullPlaylist.Tracks.Tracks {
-			fTrackName := fPlaylistTrack.Track.Name
-			fPlaylistTracks = append(fPlaylistTracks, Track{name: fTrackName})
+		for _, track := range fullPlaylist.Tracks.Tracks {
+			trackName := track.Track.Name
+			playlistTracks = append(playlistTracks,
+				Track{
+					name: trackName,
+				})
 		}
 	}
-	fPlaylists = append(fPlaylists, Playlist{tracks: fPlaylistTracks})
+	playlists = append(playlists,
+		Playlist{
+			tracks: playlistTracks,
+		})
 
-	return fPlaylists
+	return playlists
+}
+
+func GetPlaylistIDs(playlists []Playlist) (playlistIDs []string) {
+	for _, playlist := range playlists {
+		playlistID := playlist.id
+		playlistIDs = append(playlistIDs, playlistID.String())
+	}
+	return playlistIDs
+}
+
+func GetPlaylistNames(playlists []Playlist) (playlistNames []string) {
+	for _, playlist := range playlists {
+		playlistName := playlist.name
+		playlistNames = append(playlistNames, playlistName)
+	}
+	return playlistNames
 }
