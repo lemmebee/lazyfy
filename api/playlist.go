@@ -9,22 +9,22 @@ import (
 )
 
 type Track struct {
-	name         string
-	artists      []Artist
-	externalURLs map[string]string
-	previewURL   string
-	duration     int
-	explicit     bool
+	Name         string
+	Artists      []Artist
+	ExternalURLs map[string]string
+	PreviewURL   string
+	Duration     int
+	Explicit     bool
 }
 
 type Artist struct {
-	name string
+	Name string
 }
 
 type Playlist struct {
-	id     spotify.ID
-	name   string
-	tracks []Track
+	ID     spotify.ID
+	Name   string
+	Tracks []Track
 }
 
 var (
@@ -36,7 +36,7 @@ var (
 )
 
 func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
-	fullPlaylist, err := Client.GetPlaylist(ctx, playlist.id)
+	fullPlaylist, err := Client.GetPlaylist(ctx, playlist.ID)
 	if err != nil {
 		log.Fatalf("Error fetching full playlist: %v", err)
 	}
@@ -76,8 +76,8 @@ func GetPlaylists() (playlists []Playlist) {
 	for _, simplePlaylist := range simplePlaylists {
 		playlists = append(playlists,
 			Playlist{
-				id:   simplePlaylist.ID,
-				name: simplePlaylist.Name,
+				ID:   simplePlaylist.ID,
+				Name: simplePlaylist.Name,
 			})
 	}
 	for _, playlist := range playlists {
@@ -87,30 +87,33 @@ func GetPlaylists() (playlists []Playlist) {
 			trackName := track.Track.Name
 			playlistTracks = append(playlistTracks,
 				Track{
-					name: trackName,
+					Name: trackName,
 				})
 		}
 	}
 	playlists = append(playlists,
 		Playlist{
-			tracks: playlistTracks,
+			Tracks: playlistTracks,
 		})
+
+	playlists = playlists[:len(playlists)-1]
 
 	return playlists
 }
 
 func GetPlaylistIDs(playlists []Playlist) (playlistIDs []string) {
 	for _, playlist := range playlists {
-		playlistID := playlist.id
-		playlistIDs = append(playlistIDs, playlistID.String())
+		playlistID := playlist.ID
+		playlistIDs = append(playlistIDs, ", "+playlistID.String())
 	}
+
 	return playlistIDs
 }
 
 func GetPlaylistNames(playlists []Playlist) (playlistNames []string) {
 	for _, playlist := range playlists {
-		playlistName := playlist.name
-		playlistNames = append(playlistNames, playlistName)
+		playlistName := playlist.Name
+		playlistNames = append(playlistNames, ", "+playlistName)
 	}
 	return playlistNames
 }
