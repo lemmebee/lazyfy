@@ -2,6 +2,8 @@ package ui
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ehabshaaban/lazyfy/api"
@@ -11,6 +13,7 @@ import (
 // ListModel is the UI in which the user can select which forks should be
 // deleted if any, and see details on each of them.
 type ListModel struct {
+	// mode      string
 	playlists []api.Playlist
 	cursor    int
 	selected  map[int]struct{}
@@ -70,9 +73,13 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m ListModel) View() string {
-	s := boldSecondaryForeground("Which of these forks do you want to delete?\n\n")
+	emojis := []rune("🍦🧋🍡🤠👾😭🦊🐯🦆🥨🎏🍔🍒🍥🎮📦🦁🐶🐸🍕🥐🧲🚒🥇🏆🌽")
+	emoji := string(emojis[rand.Intn(len(emojis))])
+
+	s := boldSecondaryForeground("we will make you a playlist on your spotify account with tracks you select " + emoji + "\n\n")
 
 	for i, playlist := range m.playlists {
+		s += strconv.Itoa(i)
 		line := playlist.Name
 		if _, ok := m.selected[i]; ok {
 			line = iconSelected + " " + line
@@ -86,7 +93,7 @@ func (m ListModel) View() string {
 			if i > 0 {
 				nl = "\n"
 			}
-			line = nl + boldPrimaryForeground(line) + viewPlaylistName(playlist)
+			line = nl + boldPrimaryForeground(line) + viewTracks(playlist)
 		}
 
 		s += line
@@ -103,10 +110,14 @@ func (m ListModel) View() string {
 	return s
 }
 
-func viewPlaylistName(playlist api.Playlist) string {
+func viewTracks(playlist api.Playlist) string {
 	var details []string
-	if playlist.Name != "" {
-		details = append(details, fmt.Sprintf("%s", playlist.Name))
+
+	// empty playlist
+	var p api.Playlist
+
+	if playlist != p {
+		details = append(details, fmt.Sprintf("%v", api.GetPlaylistTracks(playlist)))
 	}
 	// if repo.ParentDeleted {
 	// 	details = append(details, "Parent repository was deleted")
