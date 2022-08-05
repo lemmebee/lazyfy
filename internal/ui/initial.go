@@ -13,6 +13,13 @@ import (
 	"github.com/ehabshaaban/lazyfy/api"
 )
 
+var (
+	currentPlaylistIdStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
+	subtleStyle            = lipgloss.NewStyle().Foreground(lipgloss.Color("239"))
+	doneStyle              = lipgloss.NewStyle().Margin(1, 2)
+	checkMark              = lipgloss.NewStyle().Foreground(lipgloss.Color("42")).SetString("✓")
+)
+
 type initialModel struct {
 	playlistIDs []string
 	index       int
@@ -23,55 +30,56 @@ type initialModel struct {
 	done        bool
 }
 
-var (
-	currentPlaylistIdStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
-	subtleStyle            = lipgloss.NewStyle().Foreground(lipgloss.Color("239"))
-	doneStyle              = lipgloss.NewStyle().Margin(1, 2)
-	checkMark              = lipgloss.NewStyle().Foreground(lipgloss.Color("42")).SetString("✓")
-)
-
 func NewInitialModel() initialModel {
+	ids := api.GetPlaylistIDs(api.GetPlaylists())
+	s := spinner.New()
+	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("63"))
 	p := progress.New(
 		progress.WithDefaultGradient(),
 		progress.WithWidth(40),
 		progress.WithoutPercentage(),
 	)
-	s := spinner.New()
-	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("63"))
 
 	return initialModel{
-		playlistIDs: api.GetPlaylistIDs(api.GetPlaylists()),
+		playlistIDs: ids,
 		spinner:     s,
 		progress:    p,
 	}
 }
 
 func (m initialModel) Init() tea.Cmd {
-	return tea.Batch(getPlaylistID(m.playlistIDs[m.index]), getPlaylists(), m.spinner.Tick)
+	return tea.Batch(getPlaylistID(m.playlistIDs[m.index]), m.spinner.Tick)
 }
 
 func (m initialModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+
 	case tea.WindowSizeMsg:
 		m.width, m.height = msg.Width, msg.Height
+
 	case tea.KeyMsg:
+
 		switch msg.String() {
 		case "ctrl+c", "esc", "q":
 			return m, tea.Quit
 		}
+
 	case getPlaylistsMsg:
 		list := NewListModel(msg.playlists)
 		return list, list.Init()
+
 	case spinner.TickMsg:
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
 		return m, cmd
+
 	case progress.FrameMsg:
 		newModel, cmd := m.progress.Update(msg)
 		if newModel, ok := newModel.(progress.Model); ok {
 			m.progress = newModel
 		}
 		return m, cmd
+
 	case getPlaylistIDMsg:
 		if m.index >= len(m.playlistIDs)-1 {
 			// Everything's been installed. We're done!
@@ -101,7 +109,8 @@ func (m initialModel) View() string {
 		return doneStyle.Render(fmt.Sprintf("Done! Fetched %d playlists.\n", n))
 	}
 
-	playlistCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n-1)
+	// playlistCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n-1)
+	playlistCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n)
 
 	spin := m.spinner.View() + " "
 	prog := m.progress.View()
