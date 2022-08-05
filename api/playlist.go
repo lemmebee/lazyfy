@@ -9,12 +9,12 @@ import (
 )
 
 type Track struct {
-	Name         string
-	Artists      []Artist
-	ExternalURLs map[string]string
-	PreviewURL   string
-	Duration     int
-	Explicit     bool
+	Name string
+	// Artists      []Artist
+	// ExternalURLs map[string]string
+	// PreviewURL   string
+	// Duration     int
+	// Explicit     bool
 }
 
 type Artist struct {
@@ -22,17 +22,17 @@ type Artist struct {
 }
 
 type Playlist struct {
-	ID     spotify.ID
-	Name   string
-	Tracks []Track
+	ID   spotify.ID
+	Name string
+	// Tracks []Track
 }
 
 var (
-	ctx                       = context.Background()
-	playlists      []Playlist = nil
-	playlistIDs    []string   = nil
-	playlistNames  []string   = nil
-	playlistTracks []Track    = nil
+	ctx                      = context.Background()
+	playlists     []Playlist = nil
+	playlistIDs   []string   = nil
+	playlistNames []string   = nil
+	tracks        []Track    = nil
 )
 
 func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
@@ -80,23 +80,19 @@ func GetPlaylists() (playlists []Playlist) {
 				Name: simplePlaylist.Name,
 			})
 	}
-	for _, playlist := range playlists {
-		fullPlaylist := DescribePlaylist(playlist)
+	// for _, playlist := range playlists {
+	// fullPlaylist := DescribePlaylist(playlist)
 
-		for _, track := range fullPlaylist.Tracks.Tracks {
-			trackName := track.Track.Name
-			playlistTracks = append(playlistTracks,
-				Track{
-					Name: trackName,
-				})
-		}
-	}
-	playlists = append(playlists,
-		Playlist{
-			Tracks: playlistTracks,
-		})
+	// for _, track := range fullPlaylist.Tracks.Tracks {
+	// 	trackName := track.Track.Name
+	// 	playlistTracks = append(playlistTracks,
+	// 		Track{
+	// 			Name: trackName,
+	// 		})
+	// }
+	// }
 
-	playlists = playlists[:len(playlists)-1]
+	// playlists = playlists[:len(playlists)-1]
 
 	return playlists
 }
@@ -116,4 +112,17 @@ func GetPlaylistNames(playlists []Playlist) (playlistNames []string) {
 		playlistNames = append(playlistNames, ", "+playlistName)
 	}
 	return playlistNames
+}
+
+func GetPlaylistTracks(playlist Playlist) (tracks []Track) {
+	fullPlaylist := DescribePlaylist(playlist)
+
+	for _, track := range fullPlaylist.Tracks.Tracks {
+		trackName := track.Track.Name
+		tracks = append(tracks,
+			Track{
+				Name: trackName,
+			})
+	}
+	return tracks
 }
