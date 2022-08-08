@@ -109,7 +109,6 @@ func (m initialModel) View() string {
 		return doneStyle.Render(fmt.Sprintf("Done! Fetched %d playlists.\n", n))
 	}
 
-	// playlistCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n-1)
 	playlistCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n)
 
 	spin := m.spinner.View() + " "

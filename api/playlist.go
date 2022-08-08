@@ -80,19 +80,6 @@ func GetPlaylists() (playlists []Playlist) {
 				Name: simplePlaylist.Name,
 			})
 	}
-	// for _, playlist := range playlists {
-	// fullPlaylist := DescribePlaylist(playlist)
-
-	// for _, track := range fullPlaylist.Tracks.Tracks {
-	// 	trackName := track.Track.Name
-	// 	playlistTracks = append(playlistTracks,
-	// 		Track{
-	// 			Name: trackName,
-	// 		})
-	// }
-	// }
-
-	// playlists = playlists[:len(playlists)-1]
 
 	return playlists
 }

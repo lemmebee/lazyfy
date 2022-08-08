@@ -10,16 +10,12 @@ import (
 	"github.com/muesli/termenv"
 )
 
-// ListModel is the UI in which the user can select which forks should be
-// deleted if any, and see details on each of them.
 type ListModel struct {
-	// mode      string
 	playlists []api.Playlist
 	cursor    int
 	selected  map[int]struct{}
 }
 
-// NewListModel creates a new ListModel with the required fields.
 func NewListModel(playlists []api.Playlist) ListModel {
 	return ListModel{
 		playlists: playlists,
@@ -28,7 +24,7 @@ func NewListModel(playlists []api.Playlist) ListModel {
 }
 
 func (m ListModel) Init() tea.Cmd {
-	return nil
+	return tea.EnterAltScreen
 }
 
 func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -60,13 +56,6 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.selected[m.cursor] = struct{}{}
 			}
-			// case "d":
-			// 	var deleteable []api.Playlist
-			// 	for k := range m.selected {
-			// 		deleteable = append(deleteable, m.playlists[k])
-			// 	}
-			// 	dm := NewDeletingModel(m.client, deleteable, m)
-			// 	return dm, dm.Init()
 		}
 	}
 	return m, nil
@@ -98,51 +87,18 @@ func (m ListModel) View() string {
 
 		s += line
 	}
-
-	// return s + helpView([]helpOption{
-	// 	{"up/down", "navigate", false},
-	// 	{"space", "toggle selection", false},
-	// 	{"d", "delete selected", true},
-	// 	{"a", "select all", false},
-	// 	{"n", "deselect all", false},
-	// 	{"q/esc", "quit", false},
-	// })
 	return s
 }
 
 func viewTracks(playlist api.Playlist) string {
 	var details []string
 
-	// empty playlist
 	var p api.Playlist
-
 	if playlist != p {
-		details = append(details, fmt.Sprintf("%v", api.GetPlaylistTracks(playlist)))
+		for _, t := range api.GetPlaylistTracks(playlist) {
+			details = append(details, fmt.Sprintf("%v", t.Name))
+		}
 	}
-	// if repo.ParentDeleted {
-	// 	details = append(details, "Parent repository was deleted")
-	// }
-	// if repo.ParentDMCATakeDown {
-	// 	details = append(details, "Parent repository was taken down by DMCA")
-	// }
-	// if repo.Private {
-	// 	details = append(details, "Is private")
-	// }
-	// if repo.CommitsAhead > 0 {
-	// 	details = append(details, fmt.Sprintf("Has %d commit%s ahead of upstream", repo.CommitsAhead, maybePlural(repo.CommitsAhead)))
-	// }
-	// if repo.Forks > 0 {
-	// 	details = append(details, fmt.Sprintf("Has %d fork%s", repo.Forks, maybePlural(repo.Forks)))
-	// }
-	// if repo.Stars > 0 {
-	// 	details = append(details, fmt.Sprintf("Has %d star%s", repo.Stars, maybePlural(repo.Stars)))
-	// }
-	// if repo.OpenPRs > 0 {
-	// 	details = append(details, fmt.Sprintf("Has %d open PR%s to upstream", repo.OpenPRs, maybePlural(repo.OpenPRs)))
-	// }
-	// if time.Now().Add(-30 * 24 * time.Hour).Before(repo.LastUpdate) {
-	// 	details = append(details, fmt.Sprintf("Was updated recently (%s)", repo.LastUpdate))
-	// }
 
 	if len(details) == 0 {
 		return ""
@@ -154,11 +110,4 @@ func viewTracks(playlist api.Playlist) string {
 	}
 	s += "\n"
 	return termenv.String(s).Faint().Italic().String()
-}
-
-func maybePlural(n int) string {
-	if n == 1 {
-		return ""
-	}
-	return "s"
 }
