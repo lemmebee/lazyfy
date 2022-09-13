@@ -45,6 +45,11 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			for i := range m.playlists {
 				m.selected[i] = struct{}{}
 			}
+		case "enter":
+			for _, playlist := range m.playlists {
+				tracks := NewTracksModel(playlist)
+				return tracks, tracks.Init()
+			}
 		case "n":
 			for i := range m.selected {
 				delete(m.selected, i)
@@ -95,9 +100,13 @@ func viewTracks(playlist api.Playlist) string {
 
 	var p api.Playlist
 	if playlist != p {
-		for _, t := range api.GetPlaylistTracks(playlist) {
-			details = append(details, fmt.Sprintf("%v", t.Name))
-		}
+		// for i, t := range api.GetPlaylistTracks(playlist) {
+		// 	// details = append(details, fmt.Sprintf("%v", t.Name))
+		// 	details = append(details, fmt.Sprintf("%v::::%v", i, t.Name))
+		// }
+		followerCount := api.GetPlayListFollowersCount(playlist)
+		trackCount := api.GetPlayListTrackCount(playlist)
+		details = append(details, fmt.Sprintf("%v Followers %v Tracks", followerCount, trackCount))
 	}
 
 	if len(details) == 0 {
