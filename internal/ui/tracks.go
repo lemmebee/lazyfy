@@ -12,13 +12,13 @@ var (
 	docStyle = lipgloss.NewStyle().Margin(1, 2)
 )
 
-type item struct {
-	title, desc string
+type trackItem struct {
+	name, artists string
 }
 
-func (i item) Title() string       { return i.title }
-func (i item) Description() string { return i.desc }
-func (i item) FilterValue() string { return i.title }
+func (i trackItem) Title() string       { return i.name }
+func (i trackItem) Description() string { return i.artists }
+func (i trackItem) FilterValue() string { return i.name }
 
 type TrackModel struct {
 	list list.Model
@@ -52,13 +52,16 @@ func NewTracksModel(playlist api.Playlist) TrackModel {
 	tracks := api.GetPlaylistTracks(playlist)
 
 	for _, track := range tracks {
-		items = append(items, item{
-			title: track.Name,
-			desc:  api.ConvertTrackArtistListToSingleString(track.Artists[track.Name]),
+		items = append(items, trackItem{
+			name:    track.Name,
+			artists: api.ConvertTrackArtistListToSingleString(track.Artists[track.Name]),
 		})
 	}
 
+	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	l.Title = playlist.Name
+
 	return TrackModel{
-		list: list.New(items, list.NewDefaultDelegate(), 0, 0),
+		list: l,
 	}
 }
