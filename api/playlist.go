@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/zmb3/spotify/v2"
@@ -25,7 +24,6 @@ type Artist struct {
 type Playlist struct {
 	ID   spotify.ID
 	Name string
-	// Tracks []Track
 }
 
 var (
@@ -47,28 +45,28 @@ func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
 	return fullPlaylist
 }
 
-func GetPlayListFollowersCount(playlist Playlist) (playListFollowersCount string) {
-	fullPlaylist := DescribePlaylist(playlist)
-	playListFollowersCount = strconv.FormatUint(uint64(fullPlaylist.Followers.Count), 10)
+// func GetPlayListFollowersCount(playlist Playlist) (playListFollowersCount string) {
+// 	fullPlaylist := DescribePlaylist(playlist)
+// 	playListFollowersCount = strconv.FormatUint(uint64(fullPlaylist.Followers.Count), 10)
 
-	return playListFollowersCount
-}
+// 	return playListFollowersCount
+// }
 
-func GetPlayListTrackCount(playlist Playlist) (playlistTrackCount string) {
-	fullPlaylist := DescribePlaylist(playlist)
-	playlistTrackCount = strconv.FormatUint(uint64(fullPlaylist.Tracks.Total), 10)
+// func GetPlayListTrackCount(playlist Playlist) (playlistTrackCount string) {
+// 	fullPlaylist := DescribePlaylist(playlist)
+// 	playlistTrackCount = strconv.FormatUint(uint64(fullPlaylist.Tracks.Total), 10)
 
-	return playlistTrackCount
-}
+// 	return playlistTrackCount
+// }
 
-func GetSimplePlaylistsWithCountry(countryCode string) (message string, simplePlaylists []spotify.SimplePlaylist) {
-	message, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx, spotify.Country(countryCode))
-	if err != nil {
-		log.Default().Fatalln("Error fetching simple playlist pages:", err)
-	}
-	simplePlaylists = simplePlaylistPages.Playlists
-	return message, simplePlaylists
-}
+// func GetSimplePlaylistsWithCountry(countryCode string) (message string, simplePlaylists []spotify.SimplePlaylist) {
+// 	message, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx, spotify.Country(countryCode))
+// 	if err != nil {
+// 		log.Default().Fatalln("Error fetching simple playlist pages:", err)
+// 	}
+// 	simplePlaylists = simplePlaylistPages.Playlists
+// 	return message, simplePlaylists
+// }
 
 func GetSimplePlaylists() (message string, simplePlaylists []spotify.SimplePlaylist) {
 	message, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx)
@@ -94,22 +92,22 @@ func GetPlaylists() (playlists []Playlist) {
 	return playlists
 }
 
-func GetPlaylistIDs(playlists []Playlist) (playlistIDs []string) {
-	for _, playlist := range playlists {
-		playlistID := playlist.ID
-		playlistIDs = append(playlistIDs, playlistID.String())
-	}
+// func GetPlaylistIDs(playlists []Playlist) (playlistIDs []string) {
+// 	for _, playlist := range playlists {
+// 		playlistID := playlist.ID
+// 		playlistIDs = append(playlistIDs, playlistID.String())
+// 	}
 
-	return playlistIDs
-}
+// 	return playlistIDs
+// }
 
-func GetPlaylistNames(playlists []Playlist) (playlistNames []string) {
-	for _, playlist := range playlists {
-		playlistName := playlist.Name
-		playlistNames = append(playlistNames, playlistName)
-	}
-	return playlistNames
-}
+// func GetPlaylistNames(playlists []Playlist) (playlistNames []string) {
+// 	for _, playlist := range playlists {
+// 		playlistName := playlist.Name
+// 		playlistNames = append(playlistNames, playlistName)
+// 	}
+// 	return playlistNames
+// }
 
 func GetPlaylistTracks(playlist Playlist) (tracks []Track) {
 	fullPlaylist := DescribePlaylist(playlist)

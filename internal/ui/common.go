@@ -1,22 +1,23 @@
 package ui
 
 import (
-	"fmt"
-
+	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/termenv"
 )
 
 var (
-	primary   = termenv.ColorProfile().Color("205")
-	secondary = termenv.ColorProfile().Color("#89F0CB")
-	gray      = termenv.ColorProfile().Color("#626262")
-	midGray   = termenv.ColorProfile().Color("#4A4A4A")
-	red       = termenv.ColorProfile().Color("#ED567A")
+	primary    = termenv.ColorProfile().Color("205")
+	secondary  = termenv.ColorProfile().Color("#89F0CB")
+	gray       = termenv.ColorProfile().Color("#626262")
+	midGray    = termenv.ColorProfile().Color("#4A4A4A")
+	blue       = termenv.ColorProfile().Color("#F0FFFF")
+	red        = termenv.ColorProfile().Color("#FF2D00")
+	docStyle   = lipgloss.NewStyle().Margin(1)
+	titleStyle = lipgloss.NewStyle().MarginLeft(0)
 )
 
 const (
-	iconSelected    = "●"
-	iconNotSelected = "○"
+	star = string(`* `)
 )
 
 func boldPrimaryForeground(s string) string {
@@ -27,16 +28,20 @@ func boldSecondaryForeground(s string) string {
 	return termenv.String(s).Foreground(secondary).Bold().String()
 }
 
+func boldBlueForeground(s string) string {
+	return termenv.String(s).Foreground(blue).Bold().String()
+}
+
 func boldRedForeground(s string) string {
 	return termenv.String(s).Foreground(red).Bold().String()
 }
 
-func redForeground(s string) string {
-	return termenv.String(s).Foreground(red).String()
+func blueForeground(s string) string {
+	return termenv.String(s).Foreground(blue).String()
 }
 
-func redFaintForeground(s string) string {
-	return termenv.String(s).Foreground(red).Faint().String()
+func blueFaintForeground(s string) string {
+	return termenv.String(s).Foreground(blue).Faint().String()
 }
 
 func grayForeground(s string) string {
@@ -49,13 +54,4 @@ func midGrayForeground(s string) string {
 
 func faint(s string) string {
 	return termenv.String(s).Faint().String()
-}
-
-type errMsg struct{ error }
-
-func (e errMsg) Error() string { return e.error.Error() }
-
-func errorView(action string, err error) string {
-	// return redForeground(fmt.Sprintf(action+": %s.\nCheck the log file for more details.", err.Error())) + singleOptionHelp("q", "quit")
-	return redForeground(fmt.Sprintf(action+": %s.\nCheck the log file for more details.", err.Error()))
 }
