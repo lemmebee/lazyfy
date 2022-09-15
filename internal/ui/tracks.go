@@ -3,22 +3,22 @@ package ui
 import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/ehabshaaban/lazyfy/api"
 )
 
 var (
-	items    []list.Item
-	docStyle = lipgloss.NewStyle().Margin(1, 2)
+	trackItems []list.Item
 )
 
 type trackItem struct {
 	name, artists string
 }
 
-func (i trackItem) Title() string       { return i.name }
-func (i trackItem) Description() string { return i.artists }
-func (i trackItem) FilterValue() string { return i.name }
+func (t trackItem) Title() string { return t.name }
+
+// TODO: Description: i.artists + track ablum + track duration
+func (t trackItem) Description() string { return t.artists }
+func (t trackItem) FilterValue() string { return t.name }
 
 type TrackModel struct {
 	list list.Model
@@ -52,14 +52,16 @@ func NewTracksModel(playlist api.Playlist) TrackModel {
 	tracks := api.GetPlaylistTracks(playlist)
 
 	for _, track := range tracks {
-		items = append(items, trackItem{
+		trackItems = append(trackItems, trackItem{
 			name:    track.Name,
 			artists: api.ConvertTrackArtistListToSingleString(track.Artists[track.Name]),
 		})
 	}
 
-	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	l.Title = playlist.Name
+	l := list.New(trackItems, list.NewDefaultDelegate(), 0, 0)
+	s := boldRedForeground(star)
+	l.Title = s + playlist.Name
+	l.Styles.Title = titleStyle
 
 	return TrackModel{
 		list: l,
