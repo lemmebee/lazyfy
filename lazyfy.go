@@ -14,7 +14,7 @@ var (
 )
 
 func main() {
-	if err := tea.NewProgram(ui.NewListModel(), tea.WithAltScreen()).Start(); err != nil {
+	if err := tea.NewProgram(ui.NewPlaylistModel(), tea.WithAltScreen()).Start(); err != nil {
 		fmt.Println("Error running lazyfy!:", err)
 		os.Exit(1)
 	}

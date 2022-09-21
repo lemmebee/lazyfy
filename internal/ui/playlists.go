@@ -63,7 +63,7 @@ func (m PlaylistModel) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func NewListModel() PlaylistModel {
+func NewPlaylistModel() PlaylistModel {
 	playlists := api.GetPlaylists()
 
 	for _, playlist := range playlists {
