@@ -9,6 +9,8 @@ import (
 
 var (
 	playlistItems []list.Item
+	state         bool = false
+	foo           TrackModel
 )
 
 type playlistItem struct {
@@ -24,43 +26,47 @@ func (p playlistItem) FilterValue() string { return p.name }
 type PlaylistModel struct {
 	list   list.Model
 	choice playlistItem
+	// state  bool
+	// foo TrackModel
 }
 
-func (m PlaylistModel) Init() tea.Cmd {
+func (playlistModel PlaylistModel) Init() tea.Cmd {
 	return tea.EnterAltScreen
 }
 
-func (m PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (playlistModel PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
-			return m, tea.Quit
+			return playlistModel, tea.Quit
 		}
 		if msg.String() == "enter" {
-			i, ok := m.list.SelectedItem().(playlistItem)
+			i, ok := playlistModel.list.SelectedItem().(playlistItem)
 			if ok {
-				m.choice = i
+				playlistModel.choice = i
 
 				playlist := api.Playlist{
-					ID:   spotify.ID(m.choice.id),
-					Name: m.choice.name,
+					ID:   spotify.ID(playlistModel.choice.id),
+					Name: playlistModel.choice.name,
 				}
-				tracks := NewTracksModel(playlist)
+				tracks := NewTracksModel(playlist, playlistModel)
+				state = true
 				return tracks, tracks.Init()
 			}
+
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
-		m.list.SetSize(msg.Width-h, msg.Height-v)
+		playlistModel.list.SetSize(msg.Width-h, msg.Height-v)
 	}
 
 	var cmd tea.Cmd
-	m.list, cmd = m.list.Update(msg)
-	return m, cmd
+	playlistModel.list, cmd = playlistModel.list.Update(msg)
+	return playlistModel, cmd
 }
 
-func (m PlaylistModel) View() string {
-	return docStyle.Render(m.list.View())
+func (playlistModel PlaylistModel) View() string {
+	return docStyle.Render(playlistModel.list.View())
 }
 
 func NewPlaylistModel() PlaylistModel {
@@ -79,5 +85,11 @@ func NewPlaylistModel() PlaylistModel {
 
 	return PlaylistModel{
 		list: l,
+		// state: false,
 	}
+}
+
+func saveTrackModelState(m TrackModel) TrackModel {
+	foo = m
+	return foo
 }

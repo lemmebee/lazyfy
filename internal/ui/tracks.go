@@ -22,6 +22,7 @@ func (t trackItem) FilterValue() string { return t.name }
 
 type TrackModel struct {
 	list list.Model
+	prev PlaylistModel
 }
 
 func (m TrackModel) Init() tea.Cmd {
@@ -33,6 +34,11 @@ func (m TrackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
+		}
+		if msg.String() == "b" {
+			var cmd tea.Cmd
+			// saveTrackModelState(m)
+			return m.prev, cmd
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
@@ -48,7 +54,7 @@ func (m TrackModel) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func NewTracksModel(playlist api.Playlist) TrackModel {
+func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) TrackModel {
 	tracks := api.GetPlaylistTracks(playlist)
 
 	for _, track := range tracks {
@@ -65,5 +71,10 @@ func NewTracksModel(playlist api.Playlist) TrackModel {
 
 	return TrackModel{
 		list: l,
+		prev: playlistModel,
 	}
 }
+
+// from playlists, it should have state "default by false"
+// set state=false "do we have tracks model yet?!" once tracks model is inited
+// return tracks model when hitting 'b'
