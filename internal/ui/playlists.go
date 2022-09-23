@@ -11,6 +11,7 @@ var (
 	playlistItems []list.Item
 	state         bool = false
 	foo           TrackModel
+	trackModels   map[spotify.ID]TrackModel = make(map[spotify.ID]TrackModel)
 )
 
 type playlistItem struct {
@@ -26,8 +27,6 @@ func (p playlistItem) FilterValue() string { return p.name }
 type PlaylistModel struct {
 	list   list.Model
 	choice playlistItem
-	// state  bool
-	// foo TrackModel
 }
 
 func (playlistModel PlaylistModel) Init() tea.Cmd {
@@ -41,18 +40,20 @@ func (playlistModel PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return playlistModel, tea.Quit
 		}
 		if msg.String() == "enter" {
-			i, ok := playlistModel.list.SelectedItem().(playlistItem)
-			if ok {
-				playlistModel.choice = i
+			i := playlistModel.list.SelectedItem().(playlistItem)
 
-				playlist := api.Playlist{
-					ID:   spotify.ID(playlistModel.choice.id),
-					Name: playlistModel.choice.name,
-				}
-				tracks := NewTracksModel(playlist, playlistModel)
-				state = true
-				return tracks, tracks.Init()
+			playlistModel.choice = i
+
+			playlist := api.Playlist{
+				ID:   spotify.ID(playlistModel.choice.id),
+				Name: playlistModel.choice.name,
 			}
+
+			if _, ok := trackModels[playlist.ID]; !ok {
+				trackModels[playlist.ID] = NewTracksModel(playlist, playlistModel)
+			}
+			tracks := trackModels[playlist.ID]
+			return tracks, tracks.Init()
 
 		}
 	case tea.WindowSizeMsg:
@@ -85,11 +86,5 @@ func NewPlaylistModel() PlaylistModel {
 
 	return PlaylistModel{
 		list: l,
-		// state: false,
 	}
-}
-
-func saveTrackModelState(m TrackModel) TrackModel {
-	foo = m
-	return foo
 }

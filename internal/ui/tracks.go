@@ -6,10 +6,6 @@ import (
 	"github.com/ehabshaaban/lazyfy/api"
 )
 
-var (
-	trackItems []list.Item
-)
-
 type trackItem struct {
 	name, artists string
 }
@@ -37,7 +33,6 @@ func (m TrackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "b" {
 			var cmd tea.Cmd
-			// saveTrackModelState(m)
 			return m.prev, cmd
 		}
 	case tea.WindowSizeMsg:
@@ -55,6 +50,8 @@ func (m TrackModel) View() string {
 }
 
 func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) TrackModel {
+	var trackItems []list.Item
+
 	tracks := api.GetPlaylistTracks(playlist)
 
 	for _, track := range tracks {
@@ -74,7 +71,3 @@ func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) TrackMod
 		prev: playlistModel,
 	}
 }
-
-// from playlists, it should have state "default by false"
-// set state=false "do we have tracks model yet?!" once tracks model is inited
-// return tracks model when hitting 'b'
