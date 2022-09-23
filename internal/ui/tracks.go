@@ -12,7 +12,7 @@ type trackItem struct {
 
 func (t trackItem) Title() string { return t.name }
 
-// TODO: Description: i.artists + track ablum + track duration
+// TODO: Description: i.artists + track ablum + track duration + explicit
 func (t trackItem) Description() string { return t.artists }
 func (t trackItem) FilterValue() string { return t.name }
 
@@ -52,7 +52,7 @@ func (m TrackModel) View() string {
 func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) TrackModel {
 	var trackItems []list.Item
 
-	tracks := api.GetPlaylistTracks(playlist)
+	tracks := api.GetPlaylistTracks(&playlist)
 
 	for _, track := range tracks {
 		trackItems = append(trackItems, trackItem{

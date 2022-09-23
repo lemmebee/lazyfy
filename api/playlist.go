@@ -24,15 +24,11 @@ type Playlist struct {
 }
 
 var (
-	ctx                      = context.Background()
-	playlists     []Playlist = nil
-	playlistIDs   []string   = nil
-	playlistNames []string   = nil
-	tracks        []Track    = nil
-	artists                  = make(map[string][]string)
+	ctx     = context.Background()
+	artists = make(map[string][]string)
 )
 
-func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
+func DescribePlaylist(playlist *Playlist) (fullPlaylist *spotify.FullPlaylist) {
 	fullPlaylist, err := Client.GetPlaylist(ctx, spotify.ID(playlist.ID))
 	if err != nil {
 		log.Fatalf("Error fetching full playlist: %v", err)
@@ -41,22 +37,22 @@ func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
 	return fullPlaylist
 }
 
-func GetSimplePlaylists() (message string, simplePlaylists []spotify.SimplePlaylist) {
-	message, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx)
+func GetSimplePlaylists() (simplePlaylists []spotify.SimplePlaylist) {
+	_, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx)
 	if err != nil {
 		log.Default().Fatalln("Error fetching simple playlist pages:", err)
 	}
 	simplePlaylists = simplePlaylistPages.Playlists
 
-	return message, simplePlaylists
+	return simplePlaylists
 }
 
-func GetPlaylists() (playlists []Playlist) {
-	_, simplePlaylists := GetSimplePlaylists()
+func GetPlaylists() (playlists []*Playlist) {
+	simplePlaylists := GetSimplePlaylists()
 
 	for _, simplePlaylist := range simplePlaylists {
 		playlists = append(playlists,
-			Playlist{
+			&Playlist{
 				ID:   string(simplePlaylist.ID),
 				Name: simplePlaylist.Name,
 			})
@@ -65,7 +61,7 @@ func GetPlaylists() (playlists []Playlist) {
 	return playlists
 }
 
-func GetPlaylistTracks(playlist Playlist) (tracks []Track) {
+func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
 	fullPlaylist := DescribePlaylist(playlist)
 
 	for _, track := range fullPlaylist.Tracks.Tracks {
@@ -78,7 +74,7 @@ func GetPlaylistTracks(playlist Playlist) (tracks []Track) {
 		}
 
 		tracks = append(tracks,
-			Track{
+			&Track{
 				Name:     trackName,
 				Artists:  artists,
 				Explicit: isExplicit,
