@@ -23,3 +23,4 @@ func main() {
 // [] cache auth token
 // [] to be created playlist web page
 // [] create new playlist with selected tracks
+// [] cobra cmd - country specific - defaulted no country
