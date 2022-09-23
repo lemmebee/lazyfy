@@ -8,12 +8,10 @@ type Track struct {
 	Explicit bool
 }
 
-var (
-	artists = make(map[string][]string)
-)
+var artists = make(map[string][]string)
 
 func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
-	fullPlaylist := DescribePlaylist(playlist)
+	fullPlaylist := describePlaylist(playlist)
 
 	for _, track := range fullPlaylist.Tracks.Tracks {
 		trackName := track.Track.Name

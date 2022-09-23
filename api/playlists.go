@@ -12,11 +12,9 @@ type Playlist struct {
 	Name string
 }
 
-var (
-	ctx = context.Background()
-)
+var ctx = context.Background()
 
-func DescribePlaylist(playlist *Playlist) (fullPlaylist *spotify.FullPlaylist) {
+func describePlaylist(playlist *Playlist) (fullPlaylist *spotify.FullPlaylist) {
 	fullPlaylist, err := Client.GetPlaylist(ctx, spotify.ID(playlist.ID))
 	if err != nil {
 		log.Fatalf("Error fetching full playlist: %v", err)
@@ -25,7 +23,7 @@ func DescribePlaylist(playlist *Playlist) (fullPlaylist *spotify.FullPlaylist) {
 	return fullPlaylist
 }
 
-func GetSimplePlaylists() (simplePlaylists []spotify.SimplePlaylist) {
+func getSimplePlaylists() (simplePlaylists []spotify.SimplePlaylist) {
 	_, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx)
 	if err != nil {
 		log.Default().Fatalln("Error fetching simple playlist pages:", err)
@@ -36,7 +34,7 @@ func GetSimplePlaylists() (simplePlaylists []spotify.SimplePlaylist) {
 }
 
 func GetPlaylists() (playlists []*Playlist) {
-	simplePlaylists := GetSimplePlaylists()
+	simplePlaylists := getSimplePlaylists()
 
 	for _, simplePlaylist := range simplePlaylists {
 		playlists = append(playlists,
