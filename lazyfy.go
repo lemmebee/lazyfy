@@ -1,16 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ehabshaaban/lazyfy/internal/ui"
-)
-
-var (
-	ctx = context.Background()
 )
 
 func main() {
@@ -19,3 +14,12 @@ func main() {
 		os.Exit(1)
 	}
 }
+
+// TODO:
+// [] add tests
+// [] add ci
+// [] select tracks, with highlight
+// [] unselect tracks, with unhighlight
+// [] cache auth token
+// [] to be created playlist web page
+// [] create new playlist with selected tracks
