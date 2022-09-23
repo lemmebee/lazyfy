@@ -6,26 +6,19 @@ import (
 	"github.com/ehabshaaban/lazyfy/api"
 )
 
-var (
-	playlistItems []list.Item
-	state         bool = false
-	foo           TrackModel
-	trackModels   map[string]TrackModel = make(map[string]TrackModel)
-)
+var trackModels = make(map[string]*trackModel)
 
-type playlistItem struct {
-	id, name string
-}
+type playlist api.Playlist
 
-func (p playlistItem) Title() string { return p.name }
+func (p playlist) Title() string { return p.Name }
 
 // TODO: Description: p.id + # of followers + # of likes + # songs
-func (p playlistItem) Description() string { return p.id }
-func (p playlistItem) FilterValue() string { return p.name }
+func (p playlist) Description() string { return p.ID }
+func (p playlist) FilterValue() string { return p.Name }
 
 type PlaylistModel struct {
 	list   list.Model
-	choice playlistItem
+	choice *playlist
 }
 
 func (playlistModel PlaylistModel) Init() tea.Cmd {
@@ -39,13 +32,13 @@ func (playlistModel PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return playlistModel, tea.Quit
 		}
 		if msg.String() == "enter" {
-			i := playlistModel.list.SelectedItem().(playlistItem)
+			p := playlistModel.list.SelectedItem().(playlist)
 
-			playlistModel.choice = i
+			playlistModel.choice = &p
 
 			playlist := api.Playlist{
-				ID:   playlistModel.choice.id,
-				Name: playlistModel.choice.name,
+				ID:   playlistModel.choice.ID,
+				Name: playlistModel.choice.Name,
 			}
 
 			if _, ok := trackModels[playlist.ID]; !ok {
@@ -69,21 +62,21 @@ func (playlistModel PlaylistModel) View() string {
 	return docStyle.Render(playlistModel.list.View())
 }
 
-func NewPlaylistModel() PlaylistModel {
-	playlists := api.GetPlaylists()
+func NewPlaylistModel() *PlaylistModel {
+	var playlists []list.Item
 
-	for _, playlist := range playlists {
-		playlistItems = append(playlistItems, playlistItem{
-			id:   string(playlist.ID),
-			name: playlist.Name,
+	for _, p := range api.GetPlaylists() {
+		playlists = append(playlists, playlist{
+			ID:   string(p.ID),
+			Name: p.Name,
 		})
 	}
 
-	l := list.New(playlistItems, list.NewDefaultDelegate(), 0, 0)
+	l := list.New(playlists, list.NewDefaultDelegate(), 0, 0)
 	l.Title = boldBlueForeground("Look At All Those Playlists!\nwww.youtube.com/watch?v=NsLKQTh-Bqo")
 	l.Styles.Title = titleStyle
 
-	return PlaylistModel{
+	return &PlaylistModel{
 		list: l,
 	}
 }
