@@ -6,26 +6,26 @@ import (
 	"github.com/ehabshaaban/lazyfy/api"
 )
 
-type trackItem struct {
-	name, artists string
+type track api.Track
+
+func (t track) Title() string { return t.Name }
+
+// TODO: Description: i.artists + track ablum + track duration + isExplicit
+func (t track) Description() string {
+	return api.ConvertTrackArtistListToSingleString(t.Artists[t.Name])
 }
+func (t track) FilterValue() string { return t.Name }
 
-func (t trackItem) Title() string { return t.name }
-
-// TODO: Description: i.artists + track ablum + track duration + explicit
-func (t trackItem) Description() string { return t.artists }
-func (t trackItem) FilterValue() string { return t.name }
-
-type TrackModel struct {
+type trackModel struct {
 	list list.Model
 	prev PlaylistModel
 }
 
-func (m TrackModel) Init() tea.Cmd {
+func (m trackModel) Init() tea.Cmd {
 	return tea.EnterAltScreen
 }
 
-func (m TrackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
@@ -45,28 +45,26 @@ func (m TrackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m TrackModel) View() string {
+func (m trackModel) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) TrackModel {
-	var trackItems []list.Item
+func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) *trackModel {
+	var tracks []list.Item
 
-	tracks := api.GetPlaylistTracks(&playlist)
-
-	for _, track := range tracks {
-		trackItems = append(trackItems, trackItem{
-			name:    track.Name,
-			artists: api.ConvertTrackArtistListToSingleString(track.Artists[track.Name]),
+	for _, t := range api.GetPlaylistTracks(&playlist) {
+		tracks = append(tracks, track{
+			Name:    t.Name,
+			Artists: t.Artists,
 		})
 	}
 
-	l := list.New(trackItems, list.NewDefaultDelegate(), 0, 0)
+	l := list.New(tracks, list.NewDefaultDelegate(), 0, 0)
 	s := boldRedForeground(star)
 	l.Title = s + playlist.Name
 	l.Styles.Title = titleStyle
 
-	return TrackModel{
+	return &trackModel{
 		list: l,
 		prev: playlistModel,
 	}
