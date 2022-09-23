@@ -14,10 +14,6 @@ type Track struct {
 	Explicit bool
 }
 
-type Artist struct {
-	Name string
-}
-
 type Playlist struct {
 	ID   string
 	Name string
