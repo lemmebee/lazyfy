@@ -4,14 +4,13 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ehabshaaban/lazyfy/api"
-	"github.com/zmb3/spotify/v2"
 )
 
 var (
 	playlistItems []list.Item
 	state         bool = false
 	foo           TrackModel
-	trackModels   map[spotify.ID]TrackModel = make(map[spotify.ID]TrackModel)
+	trackModels   map[string]TrackModel = make(map[string]TrackModel)
 )
 
 type playlistItem struct {
@@ -45,7 +44,7 @@ func (playlistModel PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			playlistModel.choice = i
 
 			playlist := api.Playlist{
-				ID:   spotify.ID(playlistModel.choice.id),
+				ID:   playlistModel.choice.id,
 				Name: playlistModel.choice.name,
 			}
 

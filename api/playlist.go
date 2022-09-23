@@ -19,7 +19,7 @@ type Artist struct {
 }
 
 type Playlist struct {
-	ID   spotify.ID
+	ID   string
 	Name string
 }
 
@@ -33,7 +33,7 @@ var (
 )
 
 func DescribePlaylist(playlist Playlist) (fullPlaylist *spotify.FullPlaylist) {
-	fullPlaylist, err := Client.GetPlaylist(ctx, playlist.ID)
+	fullPlaylist, err := Client.GetPlaylist(ctx, spotify.ID(playlist.ID))
 	if err != nil {
 		log.Fatalf("Error fetching full playlist: %v", err)
 	}
@@ -57,7 +57,7 @@ func GetPlaylists() (playlists []Playlist) {
 	for _, simplePlaylist := range simplePlaylists {
 		playlists = append(playlists,
 			Playlist{
-				ID:   simplePlaylist.ID,
+				ID:   string(simplePlaylist.ID),
 				Name: simplePlaylist.Name,
 			})
 	}
