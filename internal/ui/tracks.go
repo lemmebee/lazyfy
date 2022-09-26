@@ -10,15 +10,15 @@ type track api.Track
 
 var selectedTracks = make(map[string]string)
 
-func (t track) Title() string {
+func (t *track) Title() string {
 	return boldRedForeground(selectedTracks[t.ID]) + t.Name
 }
 
 // TODO: Description: i.artists + track ablum + track duration + isExplicit
-func (t track) Description() string {
+func (t *track) Description() string {
 	return api.ConvertTrackArtistListToSingleString(t.Artists[t.Name])
 }
-func (t track) FilterValue() string { return t.Name }
+func (t *track) FilterValue() string { return t.Name }
 
 type trackModel struct {
 	list list.Model
@@ -37,7 +37,7 @@ func (m trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		if msg.String() == " " {
-			t := m.list.SelectedItem().(track)
+			t := m.list.SelectedItem().(*track)
 			selectedTracks[t.ID] = star
 		}
 
@@ -63,7 +63,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) *trackMo
 	var tracks []list.Item
 
 	for _, t := range api.GetPlaylistTracks(&playlist) {
-		tracks = append(tracks, track{
+		tracks = append(tracks, &track{
 			ID:      t.ID,
 			Name:    t.Name,
 			Artists: t.Artists,
