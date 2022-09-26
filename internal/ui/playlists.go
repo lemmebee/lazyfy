@@ -12,7 +12,7 @@ type playlist api.Playlist
 
 func (p playlist) Title() string { return p.Name }
 
-// TODO: Description: p.id + # of followers + # of likes + # songs
+// TODO: Description: # of followers + # of likes + # songs
 func (p playlist) Description() string { return p.ID }
 func (p playlist) FilterValue() string { return p.Name }
 

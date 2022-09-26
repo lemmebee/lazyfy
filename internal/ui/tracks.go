@@ -54,6 +54,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) *trackMo
 
 	for _, t := range api.GetPlaylistTracks(&playlist) {
 		tracks = append(tracks, track{
+			ID:      t.ID,
 			Name:    t.Name,
 			Artists: t.Artists,
 		})
