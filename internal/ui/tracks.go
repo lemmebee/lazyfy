@@ -22,14 +22,14 @@ func (t *track) FilterValue() string { return t.Name }
 
 type trackModel struct {
 	list list.Model
-	prev PlaylistModel
+	prev *PlaylistModel
 }
 
-func (m trackModel) Init() tea.Cmd {
+func (m *trackModel) Init() tea.Cmd {
 	return tea.EnterAltScreen
 }
 
-func (m trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
@@ -55,11 +55,11 @@ func (m trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m trackModel) View() string {
+func (m *trackModel) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) *trackModel {
+func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackModel {
 	var tracks []list.Item
 
 	for _, t := range api.GetPlaylistTracks(&playlist) {

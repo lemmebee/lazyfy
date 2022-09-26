@@ -21,11 +21,11 @@ type PlaylistModel struct {
 	choice *playlist
 }
 
-func (playlistModel PlaylistModel) Init() tea.Cmd {
+func (playlistModel *PlaylistModel) Init() tea.Cmd {
 	return tea.EnterAltScreen
 }
 
-func (playlistModel PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (playlistModel *PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
