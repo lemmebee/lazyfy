@@ -4,7 +4,6 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ehabshaaban/lazyfy/api"
-	"github.com/ehabshaaban/lazyfy/log"
 )
 
 type track api.Track
@@ -40,7 +39,6 @@ func (m trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.String() == " " {
 			t := m.list.SelectedItem().(track)
 			selectedTracks[t.ID] = star
-			log.Log(selectedTracks)
 		}
 
 		if msg.String() == "b" {
