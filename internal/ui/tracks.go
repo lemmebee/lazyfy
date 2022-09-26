@@ -4,11 +4,16 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ehabshaaban/lazyfy/api"
+	"github.com/ehabshaaban/lazyfy/log"
 )
 
 type track api.Track
 
-func (t track) Title() string { return t.Name }
+var selectedTracks = make(map[string]string)
+
+func (t track) Title() string {
+	return boldRedForeground(selectedTracks[t.ID]) + t.Name
+}
 
 // TODO: Description: i.artists + track ablum + track duration + isExplicit
 func (t track) Description() string {
@@ -31,6 +36,13 @@ func (m trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
 		}
+
+		if msg.String() == " " {
+			t := m.list.SelectedItem().(track)
+			selectedTracks[t.ID] = star
+			log.Log(selectedTracks)
+		}
+
 		if msg.String() == "b" {
 			var cmd tea.Cmd
 			return m.prev, cmd
@@ -61,7 +73,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel PlaylistModel) *trackMo
 	}
 
 	l := list.New(tracks, list.NewDefaultDelegate(), 0, 0)
-	s := boldRedForeground(star)
+	s := boldBlueForeground(plus)
 	l.Title = s + playlist.Name
 	l.Styles.Title = titleStyle
 
