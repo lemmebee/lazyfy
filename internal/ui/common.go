@@ -18,6 +18,7 @@ var (
 
 const (
 	star = string(`* `)
+	plus = string(`+ `)
 )
 
 func boldPrimaryForeground(s string) string {
