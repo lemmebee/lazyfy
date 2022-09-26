@@ -10,11 +10,11 @@ var trackModels = make(map[string]*trackModel)
 
 type playlist api.Playlist
 
-func (p playlist) Title() string { return p.Name }
+func (p *playlist) Title() string { return p.Name }
 
 // TODO: Description: # of followers + # of likes + # songs
-func (p playlist) Description() string { return p.ID }
-func (p playlist) FilterValue() string { return p.Name }
+func (p *playlist) Description() string { return p.ID }
+func (p *playlist) FilterValue() string { return p.Name }
 
 type PlaylistModel struct {
 	list   list.Model
@@ -32,9 +32,9 @@ func (playlistModel PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return playlistModel, tea.Quit
 		}
 		if msg.String() == "enter" {
-			p := playlistModel.list.SelectedItem().(playlist)
+			p := playlistModel.list.SelectedItem().(*playlist)
 
-			playlistModel.choice = &p
+			playlistModel.choice = p
 
 			playlist := api.Playlist{
 				ID:   playlistModel.choice.ID,
@@ -66,7 +66,7 @@ func NewPlaylistModel() *PlaylistModel {
 	var playlists []list.Item
 
 	for _, p := range api.GetPlaylists() {
-		playlists = append(playlists, playlist{
+		playlists = append(playlists, &playlist{
 			ID:   string(p.ID),
 			Name: p.Name,
 		})
