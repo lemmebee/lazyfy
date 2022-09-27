@@ -21,7 +21,7 @@ func main() {
 // [] update track
 // [] update playlist desc
 // [x] select tracks, with highlight
-// [] unselect tracks, with unhighlight
+// [x] unselect tracks, with unhighlight
 // [] cache auth token
 // [] to be created playlist web page
 // [] create new playlist with selected tracks

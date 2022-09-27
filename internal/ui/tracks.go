@@ -41,6 +41,12 @@ func (m *trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			selectedTracks[t.ID] = star
 		}
 
+		if msg.String() == "r" {
+			t := m.list.SelectedItem().(*track)
+			selectedTracks[t.ID] = ""
+			delete(selectedTracks, t.ID)
+		}
+
 		if msg.String() == "b" {
 			var cmd tea.Cmd
 			return m.prev, cmd
