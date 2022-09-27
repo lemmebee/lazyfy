@@ -12,8 +12,9 @@ type playlist api.Playlist
 
 func (p *playlist) Title() string { return p.Name }
 
-// TODO: Description: # of followers + # of likes + # songs
-func (p *playlist) Description() string { return p.ID }
+func (p *playlist) Description() string {
+	return p.Likes + " likes"
+}
 func (p *playlist) FilterValue() string { return p.Name }
 
 type PlaylistModel struct {
@@ -67,8 +68,9 @@ func NewPlaylistModel() *PlaylistModel {
 
 	for _, p := range api.GetPlaylists() {
 		playlists = append(playlists, &playlist{
-			ID:   string(p.ID),
-			Name: p.Name,
+			ID:    string(p.ID),
+			Name:  p.Name,
+			Likes: p.Likes,
 		})
 	}
 

@@ -1,6 +1,10 @@
 package api
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/zmb3/spotify/v2"
+)
 
 type Track struct {
 	ID       string
@@ -12,7 +16,7 @@ type Track struct {
 var artists = make(map[string][]string)
 
 func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
-	fullPlaylist := describePlaylist(playlist)
+	fullPlaylist := describePlaylist(spotify.ID(playlist.ID))
 
 	for _, track := range fullPlaylist.Tracks.Tracks {
 		trackId := track.Track.ID

@@ -19,11 +19,11 @@ func main() {
 // [] add tests
 // [] add ci
 // [] update track
-// [] update playlist desc
+// [] change prev from b to back arrow, cmds
+// [] create new playlist with selected tracks
+// [x] update playlist desc
 // [x] select tracks, with highlight
 // [x] unselect tracks, with unhighlight
+// [] cobra cmd - country specific - defaulted no country
 // [] cache auth token
 // [] to be created playlist web page
-// [] create new playlist with selected tracks
-// [] cobra cmd - country specific - defaulted no country
-// [] change prev from b to back arrow

@@ -3,19 +3,21 @@ package api
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/zmb3/spotify/v2"
 )
 
 type Playlist struct {
-	ID   string
-	Name string
+	ID    string
+	Name  string
+	Likes string
 }
 
 var ctx = context.Background()
 
-func describePlaylist(playlist *Playlist) (fullPlaylist *spotify.FullPlaylist) {
-	fullPlaylist, err := Client.GetPlaylist(ctx, spotify.ID(playlist.ID))
+func describePlaylist(playlistID spotify.ID) (fullPlaylist *spotify.FullPlaylist) {
+	fullPlaylist, err := Client.GetPlaylist(ctx, playlistID)
 	if err != nil {
 		log.Fatalf("Error fetching full playlist: %v", err)
 	}
@@ -39,10 +41,18 @@ func GetPlaylists() (playlists []*Playlist) {
 	for _, simplePlaylist := range simplePlaylists {
 		playlists = append(playlists,
 			&Playlist{
-				ID:   string(simplePlaylist.ID),
-				Name: simplePlaylist.Name,
+				ID:    string(simplePlaylist.ID),
+				Name:  simplePlaylist.Name,
+				Likes: getPlayListLikes(simplePlaylist.ID),
 			})
 	}
 
 	return playlists
+}
+
+func getPlayListLikes(playlistID spotify.ID) string {
+	fullPlaylist := describePlaylist(playlistID)
+	likes := strconv.FormatUint(uint64(fullPlaylist.Followers.Count), 10)
+
+	return likes
 }
