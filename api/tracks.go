@@ -1,6 +1,7 @@
 package api
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/zmb3/spotify/v2"
@@ -11,6 +12,7 @@ type Track struct {
 	Name     string
 	Artists  map[string][]string
 	Explicit bool
+	Duration string
 }
 
 var artists = make(map[string][]string)
@@ -23,6 +25,7 @@ func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
 		trackName := track.Track.Name
 		isExplicit := track.Track.Explicit
 		simpleArtists := track.Track.Artists
+		duration := track.Track.Duration
 
 		for _, simpleArtist := range simpleArtists {
 			artists[trackName] = append(artists[trackName], simpleArtist.Name)
@@ -34,6 +37,7 @@ func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
 				Name:     trackName,
 				Artists:  artists,
 				Explicit: isExplicit,
+				Duration: strconv.FormatInt(int64(duration), 10),
 			})
 	}
 
