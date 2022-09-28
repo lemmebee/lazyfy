@@ -1,7 +1,7 @@
 package api
 
 import (
-	"strconv"
+	"fmt"
 	"strings"
 
 	"github.com/zmb3/spotify/v2"
@@ -37,7 +37,7 @@ func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
 				Name:     trackName,
 				Artists:  artists,
 				Explicit: isExplicit,
-				Duration: strconv.FormatInt(int64(duration), 10),
+				Duration: convertMillisecondsToMinutesAndSeconds(duration),
 			})
 	}
 
@@ -46,4 +46,10 @@ func GetPlaylistTracks(playlist *Playlist) (tracks []*Track) {
 
 func ConvertTrackArtistListToSingleString(artists []string) string {
 	return strings.Join(artists, ", ")
+}
+
+func convertMillisecondsToMinutesAndSeconds(milliseconds int) string {
+	seconds := milliseconds / 1000
+	minutes := seconds / 60
+	return fmt.Sprint(minutes) + ":" + fmt.Sprint(seconds)[:len(fmt.Sprint(seconds))-1]
 }

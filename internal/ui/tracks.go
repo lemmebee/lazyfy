@@ -11,10 +11,13 @@ type track api.Track
 var selectedTracks = make(map[string]string)
 
 func (t *track) Title() string {
-	return boldRedForeground(selectedTracks[t.ID]) + t.Name
+	if t.Explicit {
+		return greenRedForeground(selectedTracks[t.ID]) + boldRedForeground("E ") + t.Name
+	} else {
+		return greenRedForeground(selectedTracks[t.ID]) + t.Name
+	}
 }
 
-// TODO: Description: i.artists + track ablum + track duration + isExplicit
 func (t *track) Description() string {
 	return t.Duration + ", " + api.ConvertTrackArtistListToSingleString(t.Artists[t.Name])
 }
@@ -74,6 +77,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 			Name:     t.Name,
 			Artists:  t.Artists,
 			Duration: t.Duration,
+			Explicit: t.Explicit,
 		})
 	}
 

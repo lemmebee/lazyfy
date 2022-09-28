@@ -12,6 +12,7 @@ var (
 	midGray    = termenv.ColorProfile().Color("#4A4A4A")
 	blue       = termenv.ColorProfile().Color("#F0FFFF")
 	red        = termenv.ColorProfile().Color("#FF2D00")
+	green      = termenv.ColorProfile().Color("#00FF00")
 	docStyle   = lipgloss.NewStyle().Margin(1)
 	titleStyle = lipgloss.NewStyle().MarginLeft(0)
 )
@@ -35,6 +36,10 @@ func boldBlueForeground(s string) string {
 
 func boldRedForeground(s string) string {
 	return termenv.String(s).Foreground(red).Bold().String()
+}
+
+func greenRedForeground(s string) string {
+	return termenv.String(s).Foreground(green).Bold().String()
 }
 
 func blueForeground(s string) string {
