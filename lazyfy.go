@@ -16,14 +16,14 @@ func main() {
 }
 
 // TODO:
+// [] create new playlist with selected tracks, bof model
+// [] to be created playlist web page
 // [x] add tests
 // [x] add ci
 // [x] update track desc
-// [] change prev from b to back arrow, cmds
-// [] create new playlist with selected tracks
+// [x] change prev from b to backspace + delete track with delete key
 // [x] update playlist desc
 // [x] select tracks, with highlight
 // [x] unselect tracks, with unhighlight
 // [] cobra cmd - country specific - defaulted no country
 // [] cache auth token
-// [] to be created playlist web page
