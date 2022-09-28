@@ -16,7 +16,7 @@ func (t *track) Title() string {
 
 // TODO: Description: i.artists + track ablum + track duration + isExplicit
 func (t *track) Description() string {
-	return api.ConvertTrackArtistListToSingleString(t.Artists[t.Name])
+	return t.Duration + ", " + api.ConvertTrackArtistListToSingleString(t.Artists[t.Name])
 }
 func (t *track) FilterValue() string { return t.Name }
 
@@ -70,9 +70,10 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 
 	for _, t := range api.GetPlaylistTracks(&playlist) {
 		tracks = append(tracks, &track{
-			ID:      t.ID,
-			Name:    t.Name,
-			Artists: t.Artists,
+			ID:       t.ID,
+			Name:     t.Name,
+			Artists:  t.Artists,
+			Duration: t.Duration,
 		})
 	}
 

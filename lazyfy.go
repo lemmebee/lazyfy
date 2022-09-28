@@ -16,8 +16,8 @@ func main() {
 }
 
 // TODO:
-// [] add tests
-// [] add ci
+// [x] add tests
+// [x] add ci
 // [] update track
 // [] change prev from b to back arrow, cmds
 // [] create new playlist with selected tracks
