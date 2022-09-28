@@ -47,6 +47,14 @@ func GetPlaylists() (playlists []*Playlist) {
 			})
 	}
 
+	emptyPlaylist := &Playlist{}
+
+	for i, p := range playlists {
+		if p == emptyPlaylist {
+			playlists = append(playlists[:i], playlists[i+1:]...)
+		}
+	}
+
 	return playlists
 }
 
