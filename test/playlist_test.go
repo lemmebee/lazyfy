@@ -11,10 +11,7 @@ import (
 func TestFeaturedPlaylists(t *testing.T) {
 	_, playlists, err := api.Client.FeaturedPlaylists(context.Background())
 	if err != nil {
-		log.Default().Fatalln("Error fetching simple playlist pages:", err)
-	}
-
-	if playlists == nil {
-		t.Errorf("Expected to fetch playlists from Spotify!")
+		log.Default().Println(playlists)
+		log.Default().Fatalln("Expected to fetch playlists from Spotify!", err)
 	}
 }
