@@ -65,7 +65,7 @@ type model struct {
 
 func NewBafModel() model {
 	ti := textinput.New()
-	ti.Placeholder = "Lazyfy is the shit! Thanks for making me listen to only good music playlist?"
+	ti.Placeholder = "lazyfy is the shit! Thanks for making me listen to only good music playlist?"
 	ti.Focus()
 	ti.CharLimit = 156
 	ti.Width = 20
@@ -158,7 +158,7 @@ func (m model) isPlaylistPublicUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) normalView() string {
 	return fmt.Sprintf(
-		"Lazyfy is creating a playlist with the songs you selected\nWhat’s your playlist name gonna be like?\n\n%s\n\n%s",
+		"lazyfy is creating a playlist with the songs you selected\nWhat’s your playlist name gonna be like?\n\n%s\n\n%s",
 		m.textInput.View(),
 		"(esc to quit)",
 	) + "\n"
