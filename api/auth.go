@@ -17,7 +17,7 @@ import (
 
 var (
 	Client = InitSpotifyClient()
-	auth   = spotifyauth.New(spotifyauth.WithRedirectURL(config.New().RedirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate))
+	auth   = spotifyauth.New(spotifyauth.WithRedirectURL(config.New().RedirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopePlaylistModifyPublic))
 	ch     = make(chan *spotify.Client)
 	state  = createRandomState()
 )
