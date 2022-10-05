@@ -8,13 +8,13 @@ import (
 
 type track api.Track
 
-var selectedTracks = make(map[string]string)
+var SelectedTracks = make(map[string]string)
 
 func (t *track) Title() string {
 	if t.Explicit {
-		return greenRedForeground(selectedTracks[t.ID]) + boldRedForeground("E ") + t.Name
+		return greenRedForeground(SelectedTracks[t.ID]) + boldRedForeground("E ") + t.Name
 	} else {
-		return greenRedForeground(selectedTracks[t.ID]) + t.Name
+		return greenRedForeground(SelectedTracks[t.ID]) + t.Name
 	}
 }
 
@@ -41,18 +41,24 @@ func (m *trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		if msg.String() == " " {
 			t := m.list.SelectedItem().(*track)
-			selectedTracks[t.ID] = star
+			SelectedTracks[t.ID] = star
 		}
 
 		if msg.String() == "delete" {
 			t := m.list.SelectedItem().(*track)
-			selectedTracks[t.ID] = ""
-			delete(selectedTracks, t.ID)
+			SelectedTracks[t.ID] = ""
+			delete(SelectedTracks, t.ID)
 		}
 
 		if msg.String() == "backspace" {
 			var cmd tea.Cmd
 			return m.prev, cmd
+		}
+
+		if msg.String() == "b" {
+			var cmd tea.Cmd
+			baf := NewBafModel()
+			return baf, cmd
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
@@ -83,7 +89,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 
 	l := list.New(tracks, list.NewDefaultDelegate(), 0, 0)
 	s := boldBlueForeground(plus)
-	l.Title = s + playlist.Name
+	l.Title = s + playlist.Name + "\n When you done selecting songs click 'b'"
 	l.Styles.Title = titleStyle
 
 	return &trackModel{
