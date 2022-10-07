@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"log"
+	"reflect"
 	"strconv"
 
 	"github.com/zmb3/spotify/v2"
@@ -14,10 +15,12 @@ type Playlist struct {
 	Likes string
 }
 
-var ctx = context.Background()
+var Ctx = context.Background()
+
+const description string = "lazyfy did this! Check it out! https://github.com/ehabshaaban/lazyfy"
 
 func describePlaylist(playlistID spotify.ID) (fullPlaylist *spotify.FullPlaylist) {
-	fullPlaylist, err := Client.GetPlaylist(ctx, playlistID)
+	fullPlaylist, err := Client.GetPlaylist(Ctx, playlistID)
 	if err != nil {
 		log.Fatalf("Error fetching full playlist: %v", err)
 	}
@@ -26,7 +29,7 @@ func describePlaylist(playlistID spotify.ID) (fullPlaylist *spotify.FullPlaylist
 }
 
 func getSimplePlaylists() (simplePlaylists []spotify.SimplePlaylist) {
-	_, simplePlaylistPages, err := Client.FeaturedPlaylists(ctx)
+	_, simplePlaylistPages, err := Client.FeaturedPlaylists(Ctx)
 	if err != nil {
 		log.Default().Fatalln("Error fetching simple playlist pages:", err)
 	}
@@ -39,19 +42,14 @@ func GetPlaylists() (playlists []*Playlist) {
 	simplePlaylists := getSimplePlaylists()
 
 	for _, simplePlaylist := range simplePlaylists {
-		playlists = append(playlists,
-			&Playlist{
-				ID:    string(simplePlaylist.ID),
-				Name:  simplePlaylist.Name,
-				Likes: getPlayListLikes(simplePlaylist.ID),
-			})
-	}
 
-	emptyPlaylist := &Playlist{}
-
-	for i, p := range playlists {
-		if p == emptyPlaylist {
-			playlists = append(playlists[:i], playlists[i+1:]...)
+		if !reflect.DeepEqual(simplePlaylist, spotify.SimplePlaylist{}) {
+			playlists = append(playlists,
+				&Playlist{
+					ID:    string(simplePlaylist.ID),
+					Name:  simplePlaylist.Name,
+					Likes: getPlayListLikes(simplePlaylist.ID),
+				})
 		}
 	}
 
@@ -63,4 +61,20 @@ func getPlayListLikes(playlistID spotify.ID) string {
 	likes := strconv.FormatUint(uint64(fullPlaylist.Followers.Count), 10)
 
 	return likes
+}
+
+func LazyfyForUser(playlistName string, isPlaylistPublic bool) *spotify.FullPlaylist {
+	if playlistName != "" {
+		fullPlaylist, err := Client.CreatePlaylistForUser(Ctx, getUserID(), playlistName, description, isPlaylistPublic, false)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return fullPlaylist
+	} else {
+		fullPlaylist, err := Client.CreatePlaylistForUser(Ctx, getUserID(), "lazyfy me daddy ;)", description, isPlaylistPublic, false)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return fullPlaylist
+	}
 }
