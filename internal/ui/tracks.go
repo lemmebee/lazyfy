@@ -55,7 +55,7 @@ func (m *trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.prev, cmd
 		}
 
-		if msg.String() == "b" {
+		if msg.String() == "enter" {
 			var cmd tea.Cmd
 			baf := NewBafModel()
 			return baf, cmd
@@ -89,7 +89,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 
 	l := list.New(tracks, list.NewDefaultDelegate(), 0, 0)
 	s := boldBlueForeground(plus)
-	l.Title = s + playlist.Name + "\n When you done selecting songs click 'b'"
+	l.Title = s + playlist.Name + "\n When you done selecting songs click 'Enter'"
 	l.Styles.Title = titleStyle
 
 	return &trackModel{
