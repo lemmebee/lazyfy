@@ -7,7 +7,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ehabshaaban/lazyfy/log"
+	"github.com/ehabshaaban/lazyfy/api"
 )
 
 const (
@@ -87,6 +87,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.normalUpdate(msg)
 	case isPlaylistPublicMode:
 		return m.isPlaylistPublicUpdate(msg)
+	case byeByeMode:
+		return m.byeByeUpdate(msg)
 	}
 
 	return m, nil
@@ -98,6 +100,8 @@ func (m model) View() string {
 		return m.normalView()
 	case isPlaylistPublicMode:
 		return m.isPlaylistPublicView()
+	case byeByeMode:
+		return m.byeByeView()
 
 	}
 
@@ -112,8 +116,6 @@ func (m model) normalUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case tea.KeyEnter:
 			playlistName = m.textInput.Value()
-			log.Log(m.mode)
-			log.Log(playlistName)
 			m.mode = isPlaylistPublicMode
 		}
 	}
@@ -143,17 +145,27 @@ func (m model) isPlaylistPublicUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 					isPlaylistPublic = false
 				}
 			}
-			log.Log(m.mode)
-			log.Log(isPlaylistPublic)
 			m.mode = byeByeMode
-			log.Log(m.mode)
-			return m, tea.Quit
+			return m, nil
 		}
 	}
 
 	var cmd tea.Cmd
 	m.list, cmd = m.list.Update(msg)
 	return m, cmd
+}
+
+func (m model) byeByeUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
+	api.LazyfyForUser(playlistName, isPlaylistPublic)
+
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.Type {
+		case tea.KeyCtrlC, tea.KeyEsc:
+			return m, tea.Quit
+		}
+	}
+	return m, nil
 }
 
 func (m model) normalView() string {
@@ -169,4 +181,8 @@ func (m model) isPlaylistPublicView() string {
 		return quitTextStyle.Render(fmt.Sprintf("%s", m.choice))
 	}
 	return "\n" + m.list.View()
+}
+
+func (m model) byeByeView() string {
+	return fmt.Sprintf("bye bye ?")
 }
