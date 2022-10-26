@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ehabshaaban/lazyfy/api"
+	"github.com/zmb3/spotify/v2"
 )
 
 const (
@@ -18,6 +19,7 @@ const (
 
 var (
 	playlistName     string
+	playlistLink     string
 	isPlaylistPublic bool
 	items            = []list.Item{
 		item("Yes"),
@@ -61,6 +63,7 @@ type model struct {
 	list      list.Model
 	items     []item
 	choice    string
+	playlist  *spotify.FullPlaylist
 }
 
 func NewBafModel() model {
@@ -145,6 +148,10 @@ func (m model) isPlaylistPublicUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 					isPlaylistPublic = false
 				}
 			}
+			m.playlist = api.CreatePlaylistForUser(playlistName, isPlaylistPublic)
+			playlist := m.playlist.ExternalURLs
+			playlistLink = playlist["spotify"]
+
 			m.mode = byeByeMode
 			return m, nil
 		}
@@ -156,8 +163,6 @@ func (m model) isPlaylistPublicUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) byeByeUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
-	api.LazyfyForUser(playlistName, isPlaylistPublic)
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
@@ -184,5 +189,5 @@ func (m model) isPlaylistPublicView() string {
 }
 
 func (m model) byeByeView() string {
-	return fmt.Sprintf("bye bye ?")
+	return fmt.Sprintf("How crazy! Bam Boom Baf, explosions everywhere... Here's your awesome playlist \n%s", playlistLink)
 }

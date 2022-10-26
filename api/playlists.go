@@ -63,7 +63,7 @@ func getPlayListLikes(playlistID spotify.ID) string {
 	return likes
 }
 
-func LazyfyForUser(playlistName string, isPlaylistPublic bool) *spotify.FullPlaylist {
+func CreatePlaylistForUser(playlistName string, isPlaylistPublic bool) *spotify.FullPlaylist {
 	if playlistName != "" {
 		fullPlaylist, err := Client.CreatePlaylistForUser(Ctx, getUserID(), playlistName, description, isPlaylistPublic, false)
 		if err != nil {
