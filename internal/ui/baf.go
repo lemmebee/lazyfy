@@ -151,6 +151,7 @@ func (m model) isPlaylistPublicUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.playlist = api.CreatePlaylistForUser(playlistName, isPlaylistPublic)
 			playlist := m.playlist.ExternalURLs
 			playlistLink = playlist["spotify"]
+			api.AddTracksToPlaylist(m.playlist.ID, SelectedTracks)
 
 			m.mode = byeByeMode
 			return m, nil
@@ -189,5 +190,5 @@ func (m model) isPlaylistPublicView() string {
 }
 
 func (m model) byeByeView() string {
-	return fmt.Sprintf("How crazy! Bam Boom Baf, explosions everywhere... Here's your awesome playlist \n%s", playlistLink)
+	return fmt.Sprintf("How crazy! Bam Boom Baf, explosions everywhere... Here's your awesome playlist \n\n%s\n\nCtrl+c quit", playlistLink)
 }

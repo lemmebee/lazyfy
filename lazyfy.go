@@ -16,9 +16,10 @@ func main() {
 }
 
 // TODO:
-// [] create new playlist with selected tracks, baf model
-// [] Add private playlist support in LazyfyForUser()
+// [] fix rendering track list issue
 // [] update readme, tui cmds, ci, test, bubbletea, redirect uri
+// [x] create new playlist with selected tracks, baf model
+// [x] Add create private playlist support
 // [x] add tests
 // [x] add ci
 // [x] update track desc

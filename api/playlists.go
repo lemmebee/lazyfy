@@ -78,3 +78,11 @@ func CreatePlaylistForUser(playlistName string, isPlaylistPublic bool) *spotify.
 		return fullPlaylist
 	}
 }
+
+func AddTracksToPlaylist(playlistID spotify.ID, selectedTracks map[string]string) {
+	keys := make([]spotify.ID, 0, len(selectedTracks))
+	for k := range selectedTracks {
+		keys = append(keys, spotify.ID(k))
+	}
+	Client.AddTracksToPlaylist(Ctx, playlistID, keys...)
+}
