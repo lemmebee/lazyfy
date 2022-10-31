@@ -88,8 +88,8 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 	}
 
 	l := list.New(tracks, list.NewDefaultDelegate(), 0, 0)
-	s := boldBlueForeground(plus)
-	l.Title = s + playlist.Name + "\n When you done selecting songs click 'Enter'"
+	s := plus
+	l.Title = boldBlueForeground(s+playlist.Name) + "\n\n" + "(Enter to continue)\n(Space to select)\n(backspace to go back)\n(delete key to delete)"
 	l.Styles.Title = titleStyle
 
 	return &trackModel{

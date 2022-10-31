@@ -176,13 +176,15 @@ func (m model) byeByeUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) normalView() string {
 	return fmt.Sprintf(
-		"lazyfy is creating a playlist with the songs you selected\nWhat’s your playlist name gonna be like?\n\n%s\n\n%s",
+		"lazyfy is creating a playlist with the songs you selected\n\n"+boldBlueForeground("What’s your playlist name going to be like?")+"\n\n%s\n\n%s\n%s",
 		m.textInput.View(),
+		"(Enter to continue)",
 		"(esc to quit)",
 	) + "\n"
 }
 
 func (m model) isPlaylistPublicView() string {
+	m.list.Title = "Public playlist?"
 	if m.choice != "" {
 		return quitTextStyle.Render(fmt.Sprintf("%s", m.choice))
 	}
@@ -190,5 +192,5 @@ func (m model) isPlaylistPublicView() string {
 }
 
 func (m model) byeByeView() string {
-	return fmt.Sprintf("How crazy! Bam Boom Baf, explosions everywhere... Here's your awesome playlist \n\n%s\n\nCtrl+c quit", playlistLink)
+	return fmt.Sprintf("How crazy! Bam Boom Baf, explosions everywhere... Here's your awesome playlist \n\n%s\n\n(esc to quit)", playlistLink)
 }
