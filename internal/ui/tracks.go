@@ -88,7 +88,7 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 
 	l := list.New(tracks, list.NewDefaultDelegate(), 50, 100)
 	s := plus
-	l.Title = boldBlueForeground(s+playlist.Name) + "\n\n" + "(Enter to continue)\n(Space to select)\n(backspace to go back)\n(delete key to delete)"
+	l.Title = boldBlueForeground(s+playlist.Name) + "\n\n" + "(enter to continue)\n(Space to select)\n(backspace to go back)\n(delete key to delete)"
 	l.Styles.Title = titleStyle
 
 	if vh != 0 && vw != 0 {

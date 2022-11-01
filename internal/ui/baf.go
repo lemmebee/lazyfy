@@ -178,7 +178,7 @@ func (m model) normalView() string {
 	return fmt.Sprintf(
 		"lazyfy is creating a playlist with the songs you selected\n\n"+boldBlueForeground("What’s your playlist name going to be like?")+"\n\n%s\n\n%s\n%s",
 		m.textInput.View(),
-		"(Enter to continue)",
+		"(enter to continue)",
 		"(esc to quit)",
 	) + "\n"
 }

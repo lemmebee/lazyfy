@@ -81,7 +81,7 @@ func NewPlaylistModel() *PlaylistModel {
 	}
 
 	l := list.New(playlists, list.NewDefaultDelegate(), 50, 100)
-	l.Title = boldBlueForeground("Look At All Those Playlists!\nwww.youtube.com/watch?v=NsLKQTh-Bqo")
+	l.Title = boldBlueForeground("Look At All Those Playlists!\nwww.youtube.com/watch?v=NsLKQTh-Bqo") + "\n\n(enter to continue)"
 	l.Styles.Title = titleStyle
 
 	return &PlaylistModel{
