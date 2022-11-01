@@ -21,6 +21,3 @@ jobs:
 
       - name: Formate
         run: go fmt
-
-      - name: Test
-        run: cd test && go test -run "^TestFeaturedPlaylists$"

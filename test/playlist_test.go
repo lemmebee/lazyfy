@@ -1,3 +1,5 @@
+// Test needs to authenticate itself without link authentication to run on ci
+
 package test
 
 import (

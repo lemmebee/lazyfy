@@ -30,5 +30,6 @@ func main() {
 // [x] update playlist desc
 // [x] select tracks, with highlight
 // [x] unselect tracks, with unhighlight
+// [] refactor test to authenticate itself without link authentication to run on ci
 // [] cobra cmd - country specific - defaulted no country
 // [] cache auth token
