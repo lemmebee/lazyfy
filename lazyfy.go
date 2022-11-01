@@ -18,6 +18,8 @@ func main() {
 // TODO:
 // [x] fix rendering track list issue
 // [] update readme, tui cmds, ci, test, bubbletea, redirect uri
+// [x] building
+// [x] testing
 // [] tagger, releaser - ci
 // [x] create new playlist with selected tracks, baf model
 // [x] Add create private playlist support
