@@ -14,7 +14,7 @@ lazyfy is a spotify TUI, it will get featured songs daily and create custom home
 
 You need to register a new spotify app https://developer.spotify.com/dashboard/
 
-`.env` needs the following
+lazyfy needs the following environment variables
 
 - SPOTIFY_ID=""
 - SPOTIFY_SECRET=""

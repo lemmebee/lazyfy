@@ -1,10 +1,7 @@
 package config
 
 import (
-	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -15,11 +12,6 @@ type Config struct {
 
 // New returns a Config struct with env variables
 func New() *Config {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
 	config := Config{
 		SpotifyID:     "",
 		SpotifySecret: "",

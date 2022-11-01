@@ -17,7 +17,7 @@ func main() {
 
 // TODO:
 // [x] fix rendering track list issue
-// [] update readme, tui cmds, ci, test, bubbletea, redirect uri
+// [x] update readme, tui cmds, ci, test, bubbletea, redirect uri
 // [x] building
 // [x] testing
 // [] tagger, releaser - ci
