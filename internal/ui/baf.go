@@ -184,7 +184,8 @@ func (m model) normalView() string {
 }
 
 func (m model) isPlaylistPublicView() string {
-	m.list.Title = "Public playlist?"
+	m.list.Title = boldBlueForeground("Public playlist?")
+	m.list.Styles.Title = titleStyle
 	if m.choice != "" {
 		return quitTextStyle.Render(fmt.Sprintf("%s", m.choice))
 	}

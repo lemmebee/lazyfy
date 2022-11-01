@@ -16,7 +16,7 @@ func main() {
 }
 
 // TODO:
-// [] fix rendering track list issue
+// [x] fix rendering track list issue
 // [] update readme, tui cmds, ci, test, bubbletea, redirect uri
 // [] tagger, releaser - ci
 // [x] create new playlist with selected tracks, baf model
