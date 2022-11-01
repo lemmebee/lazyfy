@@ -38,8 +38,8 @@ go test -run "^TestFeaturedPlaylists$"
 
 ## Github Workflow
 
-`pull_request.yml` will run tests on every pull request
-`releaser.yml` will make a release for every merge to main
+- `pull_request.yml` will run tests on every pull request
+- `releaser.yml` will make a release for every merge to main
 
 ## Note
 
