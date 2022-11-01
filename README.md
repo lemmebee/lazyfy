@@ -1,6 +1,7 @@
 # lazyfy
 
 lazyfy is a spotify TUI, it will get featured songs daily and create custom home made playlist for you
+
 ![Alt Text](https://github.com/ehabshaaban/lazyfy/blob/main/lazyfy.gif)
 
 ## Purpose
@@ -28,8 +29,6 @@ From 'Edit Settings', Update 'Redirect URIs' with REDIRECT_URI above
 cd test
 go test -run "^TestFeaturedPlaylists$"
 ```
-
-##
 
 ## Run
 
