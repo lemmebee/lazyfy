@@ -1,5 +1,10 @@
 name: Pull Request
 
+env:
+  SPOTIFY_ID: ${{ secrets.SPOTIFY_ID }}
+  SPOTIFY_SECRET: ${{ secrets.SPOTIFY_SECRET }}
+  REDIRECT_URI: http://localhost:8080/callback
+
 on: pull_request
 
 jobs:
@@ -16,3 +21,6 @@ jobs:
 
       - name: Formate
         run: go fmt
+
+      - name: Test
+        run: cd test && go test -run "^TestFeaturedPlaylists$"
