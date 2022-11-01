@@ -29,7 +29,7 @@ type trackModel struct {
 }
 
 func (m *trackModel) Init() tea.Cmd {
-	return tea.EnterAltScreen
+	return nil
 }
 
 func (m *trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -61,8 +61,7 @@ func (m *trackModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return baf, cmd
 		}
 	case tea.WindowSizeMsg:
-		h, v := docStyle.GetFrameSize()
-		m.list.SetSize(msg.Width-h, msg.Height-v)
+		m.list.SetSize(vw, vh)
 	}
 
 	var cmd tea.Cmd
@@ -87,10 +86,14 @@ func NewTracksModel(playlist api.Playlist, playlistModel *PlaylistModel) *trackM
 		})
 	}
 
-	l := list.New(tracks, list.NewDefaultDelegate(), 0, 0)
+	l := list.New(tracks, list.NewDefaultDelegate(), 50, 100)
 	s := plus
 	l.Title = boldBlueForeground(s+playlist.Name) + "\n\n" + "(Enter to continue)\n(Space to select)\n(backspace to go back)\n(delete key to delete)"
 	l.Styles.Title = titleStyle
+
+	if vh != 0 && vw != 0 {
+		l.SetSize(vw, vh)
+	}
 
 	return &trackModel{
 		list: l,

@@ -7,6 +7,10 @@ import (
 )
 
 var trackModels = make(map[string]*trackModel)
+var (
+	vh int
+	vw int
+)
 
 type playlist api.Playlist
 
@@ -23,7 +27,7 @@ type PlaylistModel struct {
 }
 
 func (playlistModel *PlaylistModel) Init() tea.Cmd {
-	return tea.EnterAltScreen
+	return nil
 }
 
 func (playlistModel *PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -51,7 +55,9 @@ func (playlistModel *PlaylistModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
-		playlistModel.list.SetSize(msg.Width-h, msg.Height-v)
+		vh = msg.Height - v
+		vw = msg.Width - h
+		playlistModel.list.SetSize(vw, vh)
 	}
 
 	var cmd tea.Cmd
@@ -74,7 +80,7 @@ func NewPlaylistModel() *PlaylistModel {
 		})
 	}
 
-	l := list.New(playlists, list.NewDefaultDelegate(), 0, 0)
+	l := list.New(playlists, list.NewDefaultDelegate(), 50, 100)
 	l.Title = boldBlueForeground("Look At All Those Playlists!\nwww.youtube.com/watch?v=NsLKQTh-Bqo")
 	l.Styles.Title = titleStyle
 
